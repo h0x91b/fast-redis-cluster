@@ -66,7 +66,7 @@ function connectToNodesOfCluster (firstLink, callback) {
 			var name = items[0];
 			var flags = items[2];
 			var link = ( flags === 'myself' || flags === 'myself,master' || flags === 'myself,slave') ? firstLink : items[1];
-			if(flags === 'slave' || flags === 'myself,slave') {
+			if(flags === 'slave' || flags === 'myself,slave' || flags.split(',').indexOf('fail') !== -1 ) {
 					if (n === 0) {
 						callback(err, redisLinks);
 						return;
@@ -142,9 +142,12 @@ function connectToNodes (cluster) {
 function bindCommands (nodes, oldClient) {
 	var client = oldClient || new events.EventEmitter();
 	client.nodes = nodes;
+	if(client.listeners('error').length < 1) {
+		client.on('error', function(){});
+	}
 	//catch on error from nodes
 	function onError(err) {
-		console.log('got error from ', this);
+		console.log('got error %s from ', err, this);
 		client.emit('error', err);
 	}
 	for(var i=0;i<nodes.length;i++) {

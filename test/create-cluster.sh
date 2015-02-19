@@ -27,5 +27,9 @@ node test-redis-failover.js &
 
 echo "Sleep 3s and kill redis 9001"
 sleep 3s
-echo "Kill now 9001"
-kill -9 $(ps aux | grep redis-server | grep 9001 | awk '{print $2}')
+
+redis-cli -p 9005 cluster failover
+# echo "Kill now 9001"
+# kill -9 $(ps aux | grep redis-server | grep 9001 | awk '{print $2}')
+# echo "Kill now 9002"
+# kill -9 $(ps aux | grep redis-server | grep 9002 | awk '{print $2}')
