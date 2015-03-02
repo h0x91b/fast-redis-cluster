@@ -1,34 +1,31 @@
 {
-	"name": "fast-redis-cluster",
-	"version": "0.0.1",
-	"description": "Redis cluster client library",
-	"author": "Arenit,João Jerónimo <jj@crowdprocess.com>",
-	"contributors": [
-		"Arseniy Pavlenko <h0x91b@gmail.com>"
-	],
-	"main": "./index.js",
-	"dependencies": {
-		"redis": "0.8.x",
-		"redis-fast-driver": "*"
-	},
-	"optionalDependencies": {
-		"redis-fast-driver": "*"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:h0x91b/fast-redis-cluster.git"
-	},
-	"bugs": {
-		"url": "https://github.com/h0x91b/fast-redis-cluster/issues"
-	},
-	"homepage": "https://github.com/h0x91b/fast-redis-cluster",
-	"devDependencies": {},
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [
-		"redis",
-		"redis-cluster"
-	],
-	"license": "ISC"
+  "name": "fast-redis-cluster",
+  "version": "0.0.2",
+  "description": "Redis cluster client library",
+  "author": "Arseniy Pavlenko <h0x91b@gmail.com>",
+  "main": "./index.js",
+  "dependencies": {
+    "node-redis-crc16": "0.0.3",
+    "redis": "0.8.x"
+  },
+  "optionalDependencies": {
+    "redis-fast-driver": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:h0x91b/fast-redis-cluster.git"
+  },
+  "bugs": {
+    "url": "https://github.com/h0x91b/fast-redis-cluster/issues"
+  },
+  "homepage": "https://github.com/h0x91b/fast-redis-cluster",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redis",
+    "redis-cluster"
+  ],
+  "license": "ISC"
 }
