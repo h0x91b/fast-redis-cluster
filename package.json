@@ -1,11 +1,11 @@
 {
   "name": "fast-redis-cluster",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Redis cluster client library",
   "author": "Arseniy Pavlenko <h0x91b@gmail.com>",
   "main": "./index.js",
   "dependencies": {
-    "node-redis-crc16": "0.0.3",
+    "node-redis-crc16": "~0.0.4",
     "redis": "0.8.x"
   },
   "optionalDependencies": {
