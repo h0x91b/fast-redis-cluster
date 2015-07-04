@@ -1,12 +1,12 @@
 var redisCommands = require(__dirname+'/lib/commands.js');
 
-var fastRedis = null;
+var FastRedis = null;
 try {
-	fastRedis = require('redis-fast-driver');
+	FastRedis = require('redis-fast-driver');
 } catch(e) {}
 
 function getRedisClient(host, port, auth, options) {
-	var link = new fastRedis({
+	var link = new FastRedis({
 		host: host,
 		port: port,
 		auth: auth
@@ -31,8 +31,10 @@ function RedisCluster(firstLink, options, cb) {
 	var once = false;
 	
 	first.on('error', function(str){
-		if(!once) return cb(str);
-		once = true;
+		if(!once) {
+			once = true;
+			return cb(str);
+		}
 		self.connected = false;
 		self.reconnect();
 	});
