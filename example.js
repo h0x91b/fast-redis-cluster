@@ -3,18 +3,18 @@ var rcluster = require('./index.js').clusterClient;
 var t = new rcluster.clusterInstance('127.0.0.1:7001', function (err, r) {
 	if (err) throw err;
 	
-	r.rawCall(['SET', 'привет', 'мир'], function(e, data){
-		console.log('unicode save', e, data);
-		
-		r.rawCall(['SET', 'привет2', 'мир2'], function(e, data){
-			console.log('unicode save2', e, data);
-			
-			r.rawCall(['SET', 'привет3', 'мир3'], function(e, data){
-				console.log('unicode save3', e, data);
-			}, {targetSlot: 10000});
-		}, {targetSlot: 10000});
-	
-	}, {targetSlot: 10000});
+	// r.rawCall(['SET', 'привет', 'мир'], function(e, data){
+	// 	console.log('unicode save', e, data);
+	//
+	// 	r.rawCall(['SET', 'привет2', 'мир2'], function(e, data){
+	// 		console.log('unicode save2', e, data);
+	//
+	// 		r.rawCall(['SET', 'привет3', 'мир3'], function(e, data){
+	// 			console.log('unicode save3', e, data);
+	// 		}, {targetSlot: 10000});
+	// 	}, {targetSlot: 10000});
+	//
+	// }, {targetSlot: 10000});
 	
 	r.hmset('hset:1', {a:1,b:2,c:'hello'}, function(e,d){
 		console.log(e,d);

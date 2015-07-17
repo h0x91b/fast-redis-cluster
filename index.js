@@ -5,6 +5,8 @@ try {
 	FastRedis = require('redis-fast-driver');
 } catch(e) {}
 
+var RegularRedis = require('redis');
+
 function getRedisClient(host, port, auth, options) {
 	var link = new FastRedis({
 		host: host,
@@ -46,6 +48,9 @@ function RedisCluster(firstLink, options, cb) {
 }
 
 RedisCluster.prototype = {
+	toString: function(){
+		return 'RedisCluster '+JSON.stringify(this.topology.nodes, null, '\t');
+	},
 	calcSlot: (function crc16Init(){
 		var CRC16_TAB = [
 			// unsigned short CRC16_TAB[] = {...};
@@ -250,6 +255,14 @@ RedisCluster.prototype = {
 		}
 		link = link.link;
 		
+		if(args[0] === 'HMSET' && typeof args[2] === 'object') {
+			var obj = args.splice(2, 1)[0];
+			for(var k in obj) {
+				args.push(k);
+				args.push(obj[k]);
+			}
+		}
+		
 		link.rawCall(args, function(e, resp){
 			if(e) {
 				//MOVED 7365 127.0.0.1:7001
@@ -270,6 +283,19 @@ RedisCluster.prototype = {
 				return;
 			}
 			if(typeof cb !== 'undefined') {
+				if(args[0] === 'HMGET' && Array.isArray(resp)) {
+					var t = resp;
+					resp = {};
+					for(var i=2; i<args.length;i++) {
+						resp[args[i]] = t[i-2];
+					}
+				} else if(args[0] === 'HGETALL' && Array.isArray(resp)) {
+					var t = resp;
+					resp = {};
+					for(var i=0;i<t.length;i+=2) {
+						resp[t[i]] = t[i+1];
+					}
+				}
 				cb(null, resp);
 			}
 		});
