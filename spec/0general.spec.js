@@ -1,11 +1,29 @@
 var rcluster = require(__dirname+'/../index.js').clusterClient;
+var cp = require('child_process');
+var util = require('util');
+
 
 describe('General checks', function(){
 	var client, t;
+	
+	it('Run cluster', function(done){
+		console.log('run cluster');
+		var spawn = cp.spawn('/bin/bash', [__dirname+'/../run-redis-cluster.sh']);
+		spawn.on('error', function(e){
+			console.log('error', e);
+		});
+		spawn.stdout.on('data', function(out){
+			util.print(out.toString('utf-8'));
+		});
+		spawn.on('close', function(e){
+			console.log('on close', e);
+			done();
+		});
+	});
+	
 	it('Check connection', function(done){
-		new rcluster.clusterInstance('127.0.0.1:7001', function (err, r) {
-			client = r;
-			
+		console.log('Check connection');
+		client = new rcluster.clusterInstance('127.0.0.1:7001', function (err, r) {
 			expect(err).toBeNull();
 			expect(r).not.toBeNull();
 			expect(typeof r.rawCall).toBe('function');
