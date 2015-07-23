@@ -18,6 +18,7 @@ function RedisCluster(firstLink, options, cb) {
 		slots: {},
 		nodes: {}
 	};
+	this.cmdId = 0;
 	this.connected = false;
 	this.renewTopologyInProgress = false;
 	
@@ -44,10 +45,13 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 		port: port,
 		auth: auth
 	});
+	link.queue = {};
 	this.cacheLinks[key] = link;
 	link.on('error', function(err){
 		console.log('Got error from link `%s`, err:', link.name, err);
 		self.connected = false;
+		var queue = link.queue;
+		link.queue = {};
 		var id = link.id;
 		link.end();
 		delete self.cacheLinks[key];
@@ -56,6 +60,11 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 			if(self.topology.slots[i] === id) {
 				delete self.topology.slots[i];
 			}
+		}
+		var keys = Object.keys(keys);
+		keys.reverse();
+		for(var i=0;i<keys.length;i++) {
+			self.queue.unshift(queue[keys[i]]);
 		}
 		self.waitForTopology();
 	});
@@ -174,6 +183,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 		this.topology.nodes[targetId].link = this.getRedisClient(this.topology.nodes[targetId].host, this.topology.nodes[targetId].port, this.options.auth, this.options);
 	}
 	link = link.link;
+	var cmdId = self.cmdId++;
 	
 	if(args[0] === 'HMSET' && typeof args[2] === 'object') {
 		var obj = args.splice(2, 1)[0];
@@ -183,6 +193,10 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 		}
 	}
 	
+	link.queue[cmdId] = {
+		args: args,
+		cb: cb
+	};
 	link.rawCall(args, onResponse);
 	
 	function onResponse(e, resp){
@@ -212,6 +226,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 			}
 			return;
 		}
+		delete link.queue[cmdId];
 		if(typeof cb !== 'undefined') {
 			if(args[0] === 'HMGET' && Array.isArray(resp)) {
 				var t = resp;
