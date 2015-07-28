@@ -185,7 +185,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 	link = link.link;
 	var cmdId = self.cmdId++;
 	
-	if(args[0] === 'HMSET' && typeof args[2] === 'object') {
+	if(args[0].toUpperCase() === 'HMSET' && typeof args[2] === 'object') {
 		var obj = args.splice(2, 1)[0];
 		for(var k in obj) {
 			args.push(k);
@@ -228,13 +228,13 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 		}
 		if(link && link._queue) delete link._queue[cmdId];
 		if(typeof cb !== 'undefined') {
-			if(args[0] === 'HMGET' && Array.isArray(resp)) {
+			if(args[0].toUpperCase() === 'HMGET' && Array.isArray(resp)) {
 				var t = resp;
 				resp = {};
 				for(var i=2; i<args.length;i++) {
 					resp[args[i]] = t[i-2];
 				}
-			} else if(args[0] === 'HGETALL' && Array.isArray(resp)) {
+			} else if(args[0].toUpperCase() === 'HGETALL' && Array.isArray(resp)) {
 				var t = resp;
 				resp = {};
 				for(var i=0;i<t.length;i+=2) {
