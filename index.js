@@ -45,13 +45,13 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 		port: port,
 		auth: auth
 	});
-	link.queue = {};
+	link._queue = {};
 	this.cacheLinks[key] = link;
 	link.on('error', function(err){
 		console.log('Got error from link `%s`, err:', link.name, err);
 		self.connected = false;
-		var queue = link.queue;
-		link.queue = {};
+		var queue = link._queue;
+		link._queue = {};
 		var id = link.id;
 		link.end();
 		delete self.cacheLinks[key];
@@ -193,7 +193,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 		}
 	}
 	
-	link.queue[cmdId] = {
+	link._queue[cmdId] = {
 		args: args,
 		cb: cb
 	};
@@ -226,7 +226,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 			}
 			return;
 		}
-		delete link.queue[cmdId];
+		if(link && link._queue) delete link._queue[cmdId];
 		if(typeof cb !== 'undefined') {
 			if(args[0] === 'HMGET' && Array.isArray(resp)) {
 				var t = resp;
