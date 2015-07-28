@@ -204,9 +204,9 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 			var e = e.toString();
 			if(e.substr(0,3) === 'ASK') {
 				var target = e.split(' ')[2];
-				var link = self.getRedisClient(target.split(':')[0], target.split(':')[1], self.options.auth, self.options);
-				link.rawCall(['ASKING']);
-				link.rawCall(args, onResponse);
+				var linkNew = self.getRedisClient(target.split(':')[0], target.split(':')[1], self.options.auth, self.options);
+				linkNew.rawCall(['ASKING']);
+				linkNew.rawCall(args, onResponse);
 				return;
 			}
 			//MOVED 7365 127.0.0.1:7001
