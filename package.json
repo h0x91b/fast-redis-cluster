@@ -1,7 +1,7 @@
 {
-  "name": "fast-redis-cluster",
-  "version": "0.0.4",
-  "description": "Redis cluster client library",
+  "name": "fast-redis-cluster2",
+  "version": "2.0.0",
+  "description": "Fast trully async redis cluster client library with HA support, can handle reshard, failovers etc...",
   "author": "Arseniy Pavlenko <h0x91b@gmail.com>",
   "main": "./index.js",
   "dependencies": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:h0x91b/fast-redis-cluster.git"
+    "url": "git@github.com:h0x91b/fast-redis-cluster.git#remake"
   },
   "bugs": {
     "url": "https://github.com/h0x91b/fast-redis-cluster/issues"
