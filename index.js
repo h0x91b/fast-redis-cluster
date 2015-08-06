@@ -239,16 +239,24 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 		if(link && link._queue) delete link._queue[cmdId];
 		if(typeof cb !== 'undefined') {
 			if(args[0].toUpperCase() === 'HMGET' && Array.isArray(resp)) {
-				var t = resp;
-				resp = {};
-				for(var i=2; i<args.length;i++) {
-					resp[args[i]] = t[i-2];
+				if(resp.length > 0) {
+					var t = resp;
+					resp = {};
+					for(var i=2; i<args.length;i++) {
+						resp[args[i]] = t[i-2];
+					}
+				} else {
+					resp = null;
 				}
 			} else if(args[0].toUpperCase() === 'HGETALL' && Array.isArray(resp)) {
-				var t = resp;
-				resp = {};
-				for(var i=0;i<t.length;i+=2) {
-					resp[t[i]] = t[i+1];
+				if(resp.length > 0) {
+					var t = resp;
+					resp = {};
+					for(var i=0;i<t.length;i+=2) {
+						resp[t[i]] = t[i+1];
+					}
+				} else {
+					resp = null;
 				}
 			}
 			cb(null, resp);
