@@ -40,11 +40,22 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 	if(key in this.cacheLinks) {
 		return this.cacheLinks[key];
 	}
-	var link = new FastRedis({
-		host: host,
-		port: port,
-		auth: auth
-	});
+	var link;
+	
+	if(!FastRedis || options.useFallbackDriver) {
+		link = RegularRedis.createClient(port, host, options);
+		link.rawCall = function mockRawCall(args, cb) {
+			var cpArgs = args.slice(0);
+			var cmd = cpArgs.shift();
+			link.send_command(cmd, cpArgs, cb);
+		};
+	} else {
+		link = new FastRedis({
+			host: host,
+			port: port,
+			auth: auth
+		});
+	}
 	link._queue = {};
 	this.cacheLinks[key] = link;
 	link.on('error', function(err){
@@ -397,9 +408,16 @@ module.exports = {
 			};
 			if(typeof options === 'string') {
 				firstLink.host = options.split(':')[0];
-				firstLink.port = options.split(':')[1];
-			} else if(typeof options === 'object' && Array.isArray(options)) {
-				return new RedisCluster(options, settings, cb);
+				firstLink.port = parseInt(options.split(':')[1]);
+			} else if(typeof options === 'object' && !Array.isArray(options)) {
+				for(var k in options) {
+					settings[k] = options[k];
+				}
+				firstLink = {
+					host: options.host,
+					port: options.port
+				};
+				return new RedisCluster(firstLink, settings, cb);
 			} else {
 				return cb('Unsupported options');
 			}

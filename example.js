@@ -1,6 +1,12 @@
 var rcluster = require('./index.js').clusterClient;
 
-var t = new rcluster.clusterInstance('127.0.0.1:7001', function (err, r) {
+var settings = {
+	host: '127.0.0.1',
+	port: 7001,
+	useFallbackDriver: true
+};
+
+var t = new rcluster.clusterInstance(settings, function (err, r) {
 	if (err) throw err;
 	
 	// r.rawCall(['SET', 'привет', 'мир'], function(e, data){
