@@ -27,7 +27,6 @@ function RedisCluster(firstLink, options, cb) {
 	var first = this.getRedisClient(firstLink.host, firstLink.port, options.auth, options);
 	
 	first.on('ready', function(){
-		console.log('connected');
 		self.waitForTopology();
 	});
 }
@@ -273,7 +272,6 @@ RedisCluster.prototype.waitForTopology = function waitForTopology(){
 	init();
 	function init(){
 		connectStr = Object.keys(self.cacheLinks)[0];
-		console.log('connectStr', connectStr);
 		if(typeof connectStr === 'undefined') {
 			self.emit('error', 'no more masters know');
 			throw new Error('No masters found, can`t continue');
