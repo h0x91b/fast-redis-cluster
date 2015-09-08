@@ -210,6 +210,14 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 	link.rawCall(args, onResponse);
 	
 	function onResponse(e, resp){
+		if(link && link._queue) {
+			if(typeof link._queue[cmdId] !== 'undefined') {
+				link._queue[cmdId].cb = null;
+				link._queue[cmdId].args = null;
+			}
+			link._queue[cmdId] = null;
+			delete link._queue[cmdId];
+		}
 		if(e) {
 			var e = e.toString();
 			if(e.substr(0,3) === 'ASK') {
@@ -236,7 +244,6 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 			}
 			return;
 		}
-		if(link && link._queue) delete link._queue[cmdId];
 		if(typeof cb !== 'undefined') {
 			if(args[0].toUpperCase() === 'HMGET' && Array.isArray(resp)) {
 				if(resp.length > 0) {
