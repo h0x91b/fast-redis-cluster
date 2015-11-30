@@ -22,8 +22,8 @@ var t = new rcluster.clusterInstance(settings, function (err, r) {
 	//
 	// }, {targetSlot: 10000});
 	
-	r.hmset('hset:1', {a:1,b:2,c:'hello'}, function(e,d){
-		console.log(e,d);
+	r.hmset('hset:1', {a:1,b:2,c:'hello'}, function(e,d,size){
+		console.log(e,d,size);
 	});
 	
 	r.ping(function(e, resp){

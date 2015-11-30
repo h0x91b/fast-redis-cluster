@@ -209,7 +209,8 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 	};
 	link.rawCall(args, onResponse);
 	
-	function onResponse(e, resp){
+	function onResponse(e, resp, size){
+		if(typeof size === 'undefined') size = -1;
 		if(link && link._queue) {
 			if(typeof link._queue[cmdId] !== 'undefined') {
 				link._queue[cmdId].cb = null;
@@ -238,7 +239,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 				return self;
 			}
 			if(typeof cb !== 'undefined') {
-				cb(e);
+				cb(e, undefined, size);
 			} else {
 				console.log('Redis cluster, unhandled error', args, e);
 			}
@@ -266,7 +267,7 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 					resp = null;
 				}
 			}
-			cb(null, resp);
+			cb(null, resp, size);
 		}
 	}
 	
