@@ -57,6 +57,10 @@ var t = new rcluster.clusterInstance(settings, function (err, r) {
 	doIt();
 });
 
+t.on('error', function(err){
+	console.error(err);
+});
+
 //queue
 t.ping(function(e, data){
 	console.log('PONG', e, data);

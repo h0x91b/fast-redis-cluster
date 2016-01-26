@@ -58,6 +58,7 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 	link._queue = {};
 	this.cacheLinks[key] = link;
 	link.on('error', function(err){
+		link.name = link.name || link.host+':'+link.port;
 		console.log('Got error from link `%s`, err:', link.name, err);
 		self.connected = false;
 		var queue = link._queue;
@@ -71,7 +72,7 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 				delete self.topology.slots[i];
 			}
 		}
-		var keys = Object.keys(keys);
+		var keys = Object.keys(queue);
 		keys.reverse();
 		for(var i=0;i<keys.length;i++) {
 			self.queue.unshift(queue[keys[i]]);
@@ -289,8 +290,8 @@ RedisCluster.prototype.waitForTopology = function waitForTopology(){
 	function init(){
 		connectStr = Object.keys(self.cacheLinks)[0];
 		if(typeof connectStr === 'undefined') {
-			self.emit('error', 'no more masters know');
-			throw new Error('No masters found, can`t continue');
+			self.emit('error', 'No masters known');
+			return;
 		}
 		link = self.cacheLinks[connectStr];
 		link.rawCall(['CLUSTER', 'NODES'], onGetTopology);
