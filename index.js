@@ -23,6 +23,7 @@ function RedisCluster(firstLink, options, cb) {
 	this.renewTopologyInProgress = false;
 	
 	this.cacheLinks = {};
+	this.firstLink = firstLink;
 	
 	var first = this.getRedisClient(firstLink.host, firstLink.port, options.auth, options);
 	
@@ -291,6 +292,13 @@ RedisCluster.prototype.waitForTopology = function waitForTopology(){
 		connectStr = Object.keys(self.cacheLinks)[0];
 		if(typeof connectStr === 'undefined') {
 			self.emit('error', 'No masters known');
+			var first = self.getRedisClient(self.firstLink.host, self.firstLink.port, self.options.auth, self.options);
+	
+			first.on('ready', function(){
+				self.waitForTopology();
+			});
+			
+			self.renewTopologyInProgress = false;
 			return;
 		}
 		link = self.cacheLinks[connectStr];
