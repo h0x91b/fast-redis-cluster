@@ -137,10 +137,36 @@ RedisCluster.prototype.calcSlot = (function crc16Init(){
 		);
 	};
 	
+	var BUF_SIZE = 1024;
+	var buf = new Buffer(BUF_SIZE);
+	
+	function utf8BytesLength(string) {
+		var utf8length = 0, c = 0;
+		for (var n = 0; n < string.length; n++) {
+			c = string.charCodeAt(n);
+			if (c < 128) {
+				utf8length++;
+			}
+			else if((c > 127) && (c < 2048)) {
+				utf8length = utf8length+2;
+			}
+			else {
+				utf8length = utf8length+3;
+			}
+		}
+		return utf8length;
+	}
+	
 	return function crc16XModem(str){
-		var b = new Buffer(str, 'utf8');
+		var len = utf8BytesLength(str);
+		var b = buf;
+		if(len < BUF_SIZE) {
+			b.write(str, 0, len, 'utf8');
+		} else {
+			b = new Buffer(str, 'utf8');
+		}
 		var crc = 0;
-		for(var i = 0; i < b.length; i++) {
+		for(var i = 0; i < len; i++) {
 			crc = crc16Add(crc, b.readUInt8(i));
 		}
 		return crc % 16384;
