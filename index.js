@@ -170,8 +170,17 @@ RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 	}
 	
 	var targetSlot = 0;
+	var key, start, end;
 	if(args.length > 1) {
-		targetSlot = this.calcSlot(args[1].toString());
+		key = args[1].toString();
+		start = key.indexOf('{');
+		if(start !== -1) {
+			end = key.indexOf('}', start);
+			if(end !== -1 && end - start -1 > 0) {
+				key = key.substr(start+1, end-start-1);
+			}
+		}
+		targetSlot = this.calcSlot(key);
 	}
 	
 	if(typeof options !== 'undefined' && typeof options.targetSlot !== 'undefined') {

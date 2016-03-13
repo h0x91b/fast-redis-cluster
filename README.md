@@ -1,6 +1,6 @@
 # Fast-redis-cluster2
 
-Absolutely new driver, extremely fast and properly handle a cluster resizes, failovers etc.
+Absolutely new driver, extremely fast and properly handle a cluster resizes, failovers, cluster hashtags etc.
 
 # Installation
 
