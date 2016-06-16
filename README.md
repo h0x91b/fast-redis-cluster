@@ -8,11 +8,14 @@ Absolutely new driver, extremely fast and properly handle a cluster resizes, fai
 
 # Usage
 
-Look to `example.js` or `spec` folder.
+Check `example.js` or `spec` folder for more information.
+
+    var redisCluser = require('fast-redis-cluster');
 
 # Notice
 
-PUB/SUB still not supported
+* PUB/SUB still not supported
+* On windows it uses node_redis driver which is much slower
 
 # Author
 
