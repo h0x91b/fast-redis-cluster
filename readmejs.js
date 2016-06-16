@@ -1,9 +1,8 @@
 var redisCluser = require('.').clusterClient;
 //var redisCluser = require('fast-redis-cluster2').clusterClient;
 
-
 var opts = {
-	//`host` can be ip/hostanme of any working instance of cluster
+	//`host` can be ip/hostname of any working instance of cluster
 	host: '127.0.0.1',
 	port: 7001,
 	// auth: 'topsecretpassword',
@@ -27,7 +26,6 @@ redis.on('error', function(err){
 });
 
 //each redis command executed before a `ready` event will be queued and processed in right order when `ready` is occured
-//each redis command have a wrapper
 //callback is optional and if it exists it must be placed as a last argument
 redis.set('foo', 'bar2', function(err, resp){
 	console.log('set command returns err: %s, resp: %s', err, resp);
@@ -45,35 +43,38 @@ redis.get('foo', function(err, resp){
 //rawCall function has 2 arguments,
 //1 - array which contain a redis command
 //2 - optional callback
+//Redis command is case insesitive, e.g. you can specify HMGET as HMGET, hmget or HmGeT
+//but keys and value are case sensitive, foo and Foo not the same...
 redis.rawCall(['set', 'foo', 'bar'], function(err, resp){
 	console.log('SET via rawCall command returns err: %s, resp: %s', err, resp);
 });
 
-//types are decoded exactly as redis return it
-//eg get will return string
+//types are decoded exactly as redis returns it
+//e.g. GET will return string
 redis.rawCall(['set', 'number', 123]);
 redis.rawCall(['get', 'number'], function(err, resp){
-	//type of will be "string", this is not related to driver this is behaviour of redis...
+	//type of "resp" will be "string"
+	//this is not related to driver this is behaviour of redis...
 	console.log('The value: "%s", number key becomes typeof %s', resp, typeof resp);
 });
 
 //but INCR command on same key will return a number
 redis.rawCall(['incr', 'number'], function(err, resp){
-	//type of will be "number"
+	//type of "resp" will be a "number"
 	console.log('The value after INCR: "%s", number key becomes typeof %s', resp, typeof resp);
 });
-//number will be also on INCRBY ZSCORE HLEN and each other redis command which return a number.
+//"number" type will be also on INCRBY ZSCORE HLEN and each other redis command which return a number.
 
-//ZRANGE will return an Array, same as redis return..
+//ZRANGE will return an Array, same as redis returns..
 redis.rawCall(['zadd', 'sortedset', 1, 'a', 2, 'b', 3, 'c']);
 redis.rawCall(['zrange', 'sortedset', 0, -1], function(err, resp){
 	//type of will be "number"
 	console.log('JSON encoded value of zrange: %s', JSON.stringify(resp));
 });
 
-//SCAN, HSCAN, SSCAN and other *SCAN* function will return Array within Array inside, like this:
+//SCAN, HSCAN, SSCAN and other *SCAN* command will return an Array within Array, like this:
 // [ 245, ['key1', 'key2', 'key3'] ]
-// first entry (245) - cursor, second one is Array of keys.
+// first entry (245) - cursor, second one - Array of keys.
 
 //You can pass an object to HMSET redis command
 var obj = {
