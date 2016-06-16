@@ -1,6 +1,7 @@
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 var redisCommands = require(__dirname+'/lib/commands.js');
+var hostname = require('os').hostname();
 
 var FastRedis = null;
 try {
@@ -80,7 +81,7 @@ RedisCluster.prototype.getRedisClient = function getRedisClient(host, port, auth
 		}
 		self.waitForTopology();
 	});
-	
+	link.rawCall(['CLIENT', 'SETNAME', hostname]);
 	return link;
 };
 
@@ -327,13 +328,15 @@ RedisCluster.prototype.waitForTopology = function waitForTopology(){
 		connectStr = Object.keys(self.cacheLinks)[0];
 		if(typeof connectStr === 'undefined') {
 			self.emit('error', 'No masters known');
-			var first = self.getRedisClient(self.firstLink.host, self.firstLink.port, self.options.auth, self.options);
+			setTimeout(function(){
+				var first = self.getRedisClient(self.firstLink.host, self.firstLink.port, self.options.auth, self.options);
 	
-			first.on('ready', function(){
-				self.waitForTopology();
-			});
+				first.on('ready', function(){
+					self.waitForTopology();
+				});
 			
-			self.renewTopologyInProgress = false;
+				self.renewTopologyInProgress = false;
+			}, 1000);
 			return;
 		}
 		link = self.cacheLinks[connectStr];
