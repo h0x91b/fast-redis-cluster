@@ -3,7 +3,7 @@ var rcluster = require('./index.js').clusterClient;
 var settings = {
 	host: '127.0.0.1',
 	port: 7001,
-	useFallbackDriver: true
+	//useFallbackDriver: true //uses node_redis
 };
 
 var t = new rcluster.clusterInstance(settings, function (err, r) {
