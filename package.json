@@ -4,6 +4,10 @@
   "description": "Fast trully async redis cluster client library with HA support, can handle reshard, failovers etc...",
   "author": "Arseniy Pavlenko <h0x91b@gmail.com>",
   "main": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bench": "matcha benchmarks/*.js"
+  },
   "dependencies": {
     "redis": "0.8.x"
   },
@@ -18,9 +22,8 @@
     "url": "https://github.com/h0x91b/fast-redis-cluster/issues"
   },
   "homepage": "https://github.com/h0x91b/fast-redis-cluster",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "matcha": "^0.7.0"
   },
   "keywords": [
     "redis",
