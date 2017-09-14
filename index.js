@@ -375,9 +375,9 @@ RedisCluster.prototype.waitForTopology = function waitForTopology(){
 		if(!line) return;
 		var cache = line.split(' ');
 		var id = cache[0];
-		var linkStr = cache[1];
+		var linkStr = cache[1].split('@')[0];
 		var host = cache[1].split(':')[0];
-		var port = cache[1].split(':')[1];
+		var port = cache[1].split(':')[1].split('@')[0];
 		var flags = cache[2].split(',');
 		var isConected = cache[7] === 'connected';
 		
