@@ -9,10 +9,10 @@
     "bench": "matcha benchmarks/*.js"
   },
   "dependencies": {
-    "redis": "0.8.x"
+    "redis": "^2.8.0"
   },
   "optionalDependencies": {
-    "redis-fast-driver": "*"
+    "redis-fast-driver": "latest"
   },
   "repository": {
     "type": "git",

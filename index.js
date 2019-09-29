@@ -139,7 +139,7 @@ RedisCluster.prototype.calcSlot = (function crc16Init(){
 	};
 	
 	var BUF_SIZE = 1024;
-	var buf = new Buffer(BUF_SIZE);
+	var buf = Buffer.alloc(BUF_SIZE);
 	
 	function utf8BytesLength(string) {
 		var utf8length = 0, c = 0;
