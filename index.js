@@ -422,11 +422,12 @@ RedisCluster.prototype.waitForTopology = function waitForTopology(){
 		}
 	}
 };
-RedisCluster.prototype.end = function end() {
+RedisCluster.prototype.end = function end(flush) {
+	flush= flush === true;
 	this.connected = false;
 	this.topology.slots = {};
 	for(var k in this.cacheLinks) {
-		this.cacheLinks[k].end();
+		this.cacheLinks[k].end(flush);
 	}
 	this.cacheLinks = {};
 	this.topology.nodes = {};
