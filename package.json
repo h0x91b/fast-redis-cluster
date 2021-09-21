@@ -8,9 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "bench": "matcha benchmarks/*.js"
   },
-  "dependencies": {
-    "redis": "^3.1.1"
-  },
+  "dependencies": {},
   "optionalDependencies": {
     "redis-fast-driver": "latest"
   },
@@ -23,7 +21,8 @@
   },
   "homepage": "https://github.com/h0x91b/fast-redis-cluster",
   "devDependencies": {
-    "matcha": "^0.7.0"
+    "ioredis": "^4.27.9",
+    "redis": "^4.0.0-rc.1"
   },
   "keywords": [
     "redis",
