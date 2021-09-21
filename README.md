@@ -2,6 +2,10 @@
 
 Absolutely new driver which designed for high performance and proper handling of cluster resize, failover, utf-8 keys and cluster hashtags.
 
+# Benchmark (2021 september)
+
+![Screen Shot 2021-09-22 at 1 08 51](https://user-images.githubusercontent.com/810011/134256278-d51a6b4f-8555-4291-85a5-df7650ef64ec.jpg)
+
 # Installation
 
     npm install fast-redis-cluster2 --save
