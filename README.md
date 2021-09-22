@@ -4,7 +4,7 @@ Absolutely new driver which designed for high performance and proper handling of
 
 # Benchmark (2021 september)
 
-![Screen Shot 2021-09-22 at 1 08 51](https://user-images.githubusercontent.com/810011/134256278-d51a6b4f-8555-4291-85a5-df7650ef64ec.jpg)
+![134263496-d43faa0d-4740-4cc4-bfcd-daebd17c7138](https://user-images.githubusercontent.com/810011/134404964-96d83ecd-b4f0-4254-8bbb-df0cca12e9ff.jpg)
 
 # Installation
 
