@@ -168,12 +168,13 @@ if (cluster.isMaster) {
     //   bulkSize
     // });
     return new Promise(async (resolve) => {
-      let remain = bulkSize;
+      let p = [];
       for(let i=0;i<bulkSize;i++) {
         const t = test[i % test.length];
-        await redis[t[0]](...t[1]);
-        if(--remain === 0) resolve();
+        p.push(redis[t[0]](...t[1]))
       }
+      await Promise.all(p);
+      resolve();
     });
   }
 }

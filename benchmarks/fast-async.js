@@ -102,7 +102,7 @@ if (cluster.isMaster) {
   ];
 
   var bulkSize = [
-    // 5,
+    5,
     10,
     100,
     1000,
@@ -157,15 +157,16 @@ if (cluster.isMaster) {
     //   test, 
     //   bulkSize
     // });
-    return new Promise(resolve => {
-      for(let i=0;i<bulkSize;i++) {
-        redis.rawCall(test[i % test.length], done);
-      }
+    return new Promise(async (resolve) => {
       let remain = bulkSize;
-      function done(e, d) {
-        if(e) throw new Error(e);
-        if(--remain === 0) resolve();
+      let p = []
+      for(let i=0;i<bulkSize;i++) {
+        p.push(redis.rawCallAsync(test[i % test.length]));
+        // console.log({a})
+        // if(--remain === 0) resolve();
       }
+      let r = await Promise.all(p);
+      resolve();
     });
   }
 }

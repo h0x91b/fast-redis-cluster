@@ -174,6 +174,16 @@ RedisCluster.prototype.calcSlot = (function crc16Init(){
 	}
 })();
 
+RedisCluster.prototype.rawCallAsync = function rawCallAsync(args, options) {
+	let self = this;
+	return new Promise((resolve, reject) => {
+		self.rawCall(args, (err, data) => {
+			if(err) return reject(err);
+			resolve(data);
+		});
+	}, options);
+}
+
 RedisCluster.prototype.rawCall = function rawCall(args, cb, options) {
 	var self = this;
 	if(!Array.isArray(args)) {
